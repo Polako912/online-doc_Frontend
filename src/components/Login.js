@@ -1,25 +1,82 @@
 import { Form, Icon, Input, Button, Menu, Layout } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
-
 import 'antd/dist/antd.css';
+import Auth from '../service/Auth';
 import 'antd/lib/form/style/css';
 import 'antd/lib/icon/style/css';
 import 'antd/lib/input/style/css';
 import 'antd/lib/button/style/css';
 import 'antd/lib/checkbox/style/css';
 import './Login.css'
+
 const { Header, Content, Footer } = Layout;
 
 export default class Login extends React.Component {
-    handleSubmit = e => {
-        e.preventDefault();
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                console.log('Received values of form: ', values);
-            }
+    constructor(props) {
+        super(props)
+        this.state = {
+            email: '',
+            password: ''
+        };
+
+        this.handleChangeSearchValue = this.handleChangeSearchValue.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+
+    handleChangeSearchValue = async (event) => {
+        const { target } = event;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const { name } = target;
+        await this.setState({
+            [name]: value,
         });
     };
+
+    onChange = e => {
+        const { value } = e.target;
+        this.setState({
+            email: value
+        });
+    }
+
+    onChangePassword = e => {
+        const { value } = e.target;
+        this.setState({
+            password: value
+        });
+    }
+
+    handleSubmit = e => {
+        e.preventDefault();
+        var url = 'http://onlinedocapi.eu-central-1.elasticbeanstalk.com/api/users/login';
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                "email": this.state.email,
+                "password": this.state.password
+            }),
+        };
+        return fetch(url, requestOptions)
+            .then(function (response) {
+                if (response.status === 200 && response.ok) {
+                    return response.json();
+                }
+                else {
+                    alert("Failed to login");
+                }
+            })
+            .then(function (data) {
+                console.log(data);
+                var obj = data;
+                var almostToken = JSON.stringify(obj.token);
+                var goodToken = almostToken.replace(/['"]+/g, '');
+                Auth.authenticateUser(goodToken);
+                window.location.href = 'http://localhost:3000/home';
+            })
+    }
 
     render() {
         const { getFieldDecorator } = this.props.form;
@@ -51,6 +108,9 @@ export default class Login extends React.Component {
                                         prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
                                         placeholder="Username"
                                         style={{ width: '400px' }}
+                                        onChange={(e) => {
+                                            this.onChange(e)
+                                        }}
                                     />,
                                 )}
                             </Form.Item>
@@ -63,6 +123,9 @@ export default class Login extends React.Component {
                                         type="password"
                                         placeholder="Password"
                                         style={{ width: '400px' }}
+                                        onChange={(e) => {
+                                            this.onChangePassword(e)
+                                        }}
 
                                     />,
                                 )}
