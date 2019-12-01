@@ -13,7 +13,7 @@ const WrappedRegistrationForm = Form.create({ name: 'register' })(Register)
 export default () =>
     <Switch>
         <Route path="/" exact component={Home} />
-        <Route path="/login" exact component={WrappedRegistrationForm} />
+        <Route path="/login" exact component={WrappedLoginForm} />
         <Route path="/mainView" exact component={LandingPage} />
         <Route path="/register" exact component={WrappedRegistrationForm} />
     </Switch>;
