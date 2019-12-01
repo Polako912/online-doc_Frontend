@@ -1,6 +1,27 @@
 .search {
     float: left;
     width: 300px;
-    padding: 10px;
+    margin: 5px;
+}
+
+.searchBtn {
+    float: left;
     vertical-align: middle;
+}
+
+.formDiv {
+    background: '#fff';
+    padding: 24px;
+    min-height: 600px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.customLayout {
+    background-image: url("images/new-home.jpg");
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover;
 }

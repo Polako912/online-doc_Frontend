@@ -1,19 +1,20 @@
 import React from 'react';
-import { Layout, Menu, Breadcrumb, Input } from 'antd';
+import { Button, Layout, Menu, Breadcrumb, Input } from 'antd';
 import 'antd/dist/antd.css';
 import './Home.css'
+
 const { Header, Content, Footer } = Layout;
-const { Search } = Input;
+
 class Home extends React.Component {
     render() {
         return (
-            <Layout className="layout">
-                <Header>
+            <Layout className="layout customLayout">
+                <Header style={{background: '#fff'}}>
                     <div className="logo" style={{ float: 'left' }}>
-                        <h1 style={{ color: 'white', fontSize: '32px' }}>Online doctor</h1>
+                        <h1 style={{ color: 'black', fontSize: '32px' }}>Online doctor</h1>
                     </div>
                     <Menu
-                        theme="dark"
+                        theme="light"
                         mode="horizontal"
                         defaultSelectedKeys={['2']}
                         style={{ lineHeight: '64px', float: 'right' }}
@@ -23,24 +24,17 @@ class Home extends React.Component {
                         <Menu.Item key="3">Zaloguj</Menu.Item>
                     </Menu>
                 </Header>
-                <Content style={{ padding: '0 50px' }}>
+                <Content style={{ padding: '0 50px', verticalAlign: 'middle'}}>
                     <Breadcrumb style={{ margin: '16px 0' }}>
 
                     </Breadcrumb>
-                    <div style={{ background: '#fff', padding: 24, minHeight: 600 }}>
-                        <Search
-                            className="search"
-                            placeholder="specjalizacja/nazwisko"
-                            onSearch={value => console.log(value)}
-                        />
-                        <Search
-                            className="search"
-                            placeholder="miasto"
-                            onSearch={value => console.log(value)}
-                        />
+                    <div className="formDiv">
+                        <Input className="search" placeholder="nazwisko/specjalizacja" />
+                        <Input className="search" placeholder="miasto" />
+                        <Button className="searchBtn" icon="search">Search</Button>
                     </div>
                 </Content>
-                <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+                <Footer style={{ background: '#fff', textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
             </Layout>
         )
     }
