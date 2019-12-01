@@ -81,7 +81,7 @@ export default class Login extends React.Component {
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
-            <Layout className="layout">
+            <Layout className="layout customLoginLayout">
                 <Header style={{ background: '#fff' }}>
                     <div className="logo" style={{ float: 'left' }}>
                         <h1 style={{ color: 'black', fontSize: '32px' }}>Online doctor</h1>
@@ -101,12 +101,12 @@ export default class Login extends React.Component {
                     <Form onSubmit={this.handleSubmit} className="login-form">
                         <div>
                             <Form.Item>
-                                {getFieldDecorator('username', {
-                                    rules: [{ required: true, message: 'Please input your username!' }],
+                                {getFieldDecorator('email', {
+                                    rules: [{ required: true, message: 'Please enter your email!' }],
                                 })(
                                     <Input
                                         prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                        placeholder="Username"
+                                        placeholder="email"
                                         style={{ width: '400px' }}
                                         onChange={(e) => {
                                             this.onChange(e)
