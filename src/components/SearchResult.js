@@ -1,7 +1,7 @@
 import React from 'react';
 import { Descriptions, Table } from 'antd';
-import 'antd/lib/table/style/css';
 import axios from 'axios';
+import 'antd/lib/table/style/css';
 import {
     BrowserRouter as Router,
     Switch,
@@ -9,55 +9,55 @@ import {
     Link
 } from "react-router-dom";
 import { Button, Layout, Menu, Breadcrumb, Input } from 'antd';
-import Auth from '../service/Auth';
+import { Divider, Tag } from 'antd';
+import { Dropdown, Icon } from 'antd';
 
 const { Header, Content, Footer } = Layout;
 
-const columnsAppointments = [
-    { title: 'Imię lekarza', dataIndex: 'doctorName', key: 'doctorName' },
-    { title: 'Nazwisko lekarza', dataIndex: 'doctorLastName', key: 'doctorLastName' },
-    { title: 'Specjalizacja', dataIndex: 'specialization', key: 'specialization' },
-    { title: 'Data', dataIndex: 'date', key: 'date' },
-    { title: 'Adres', dataIndex: 'address', key: 'address' },
-    { title: 'Godzina', dataIndex: 'hour', key: 'hour' }
-];
-
-export default class LandingPage extends React.Component {
+export default class SearchResult extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            appointments: [],
-            regexDate: new RegExp(/\d{4}-\d{2}-\d{2}[T]/),
-            regexTime: new RegExp(/[T]\d{2}:\d{2}:\d{2}/)
-        }
+            doctros: []
+        };
+        this.columnsDoctors = [
+            { title: 'Imię lekarza', dataIndex: 'doctorName', key: 'doctorName' },
+            { title: 'Nazwisko lekarza', dataIndex: 'doctorLastName', key: 'doctorLastName' },
+            { title: 'Specjalizacja', dataIndex: 'specialization', key: 'specialization' },
+            {
+                key: 'operation', render: () => <a onClick={this.handleAppointment}>Umów się na wizytę</a>
+            },
+        ];
+        this.handleAppointment = this.handleAppointment.bind(this);
     };
 
     componentDidMount() {
-        axios.get('http://onlinedocapi.eu-central-1.elasticbeanstalk.com/api/appointments',
+        axios.get('http://onlinedocapi.eu-central-1.elasticbeanstalk.com/api/doctors/' + localStorage.getItem('parameter'),
             {
                 headers: {
-                    'Authorization': `Bearer ${Auth.getToken()}`,
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 }
             })
             .then((response) => {
-                const appointments = response.data;
-                this.setState({ appointments });
+                const doctros = response.data;
+                this.setState({ doctros });
             })
             .catch((error) => {
                 console.log(error);
             });
     }
 
+    handleAppointment = () => {
+
+    }
+
     render() {
-        const { appointments } = this.state
-        const appointmentData = appointments.map(a => ({
-            doctorName: a.doctorDto.firstNameDto,
-            doctorLastName: a.doctorDto.lastNameDto,
-            specialization: a.doctorDto.specializationDto,
-            date: (a.dateDto.replace(this.state.regexTime, '')),
-            address: a.locationDto.streetNameDto + " " + a.locationDto.streetNumberDto + "/" + a.locationDto.officeNumberDto + " " + a.locationDto.cityDto + " " + a.locationDto.zipCodeDto,
-            hour: (a.dateDto.replace(this.state.regexDate, ''))
+        const { doctros } = this.state
+        const doctorData = doctros.map(d => ({
+            doctorName: d.firstNameDto,
+            doctorLastName: d.lastNameDto,
+            specialization: d.specializationDto,
+            phoneNumber: d.phoneNumberDto
         }));
         return (
             <Layout className="layout customView">
@@ -79,8 +79,9 @@ export default class LandingPage extends React.Component {
                 <Content style={{ padding: '0 50px', verticalAlign: 'middle', justifyContent: 'center' }}>
                     <div>
                         <Table
-                            columns={columnsAppointments}
-                            dataSource={appointmentData}
+                            columns={this.columnsDoctors}
+                            expandedRowRender={record => <p style={{ margin: 0 }}>Numer telefonu: {record.phoneNumber}</p>}
+                            dataSource={doctorData}
                         />
                     </div >
                 </Content>
