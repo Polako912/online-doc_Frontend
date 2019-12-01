@@ -3,5 +3,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 600px;
+    min-height: 620px;
+}
+
+.customLoginLayout {
+    background-color: #EBF3FE;
 }
