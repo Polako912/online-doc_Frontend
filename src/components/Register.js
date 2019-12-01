@@ -16,6 +16,9 @@ export default class Login extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            firstName: '',
+            lastName: '',
+            phoneNumber: '',
             email: '',
             password: ''
         };
@@ -50,11 +53,13 @@ export default class Login extends React.Component {
 
     handleSubmit = e => {
         e.preventDefault();
-        var url = 'http://onlinedocapi.eu-central-1.elasticbeanstalk.com/api/users/login';
+        var url = 'http://onlinedocapi.eu-central-1.elasticbeanstalk.com/api/users/register';
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+                "firstNameDto": this.state.firstName,
+                "lastNameDto": this.state.lastName,
                 "emailDto": this.state.email,
                 "passwordDto": this.state.password
             }),
@@ -70,11 +75,7 @@ export default class Login extends React.Component {
             })
             .then(function (data) {
                 console.log(data);
-                var obj = data;
-                var almostToken = JSON.stringify(obj.token);
-                var goodToken = almostToken.replace(/['"]+/g, '');
-                Auth.authenticateUser(goodToken);
-                window.location.href = 'http://localhost:3000/';
+                window.location.href = 'http://localhost:3000/login';
             })
     }
 
@@ -89,7 +90,7 @@ export default class Login extends React.Component {
                     <Menu
                         theme="light"
                         mode="horizontal"
-                        defaultSelectedKeys={['3']}
+                        defaultSelectedKeys={['2']}
                         style={{ lineHeight: '64px', float: 'right' }}
                     >
                         <Menu.Item key="1"><Link to="/">Strona główna</Link></Menu.Item>
@@ -98,15 +99,57 @@ export default class Login extends React.Component {
                     </Menu>
                 </Header>
                 <Content style={{ minHeight: '600px' }}>
-                    <Form onSubmit={this.handleSubmit} className="login-form">
+                    <Form onSubmit={this.handleSubmit} className="register-form">
                         <div>
-                            <Form.Item>
-                                {getFieldDecorator('username', {
-                                    rules: [{ required: true, message: 'Please input your username!' }],
+                        <Form.Item>
+                                {getFieldDecorator('firstName', {
+                                    rules: [{ required: true, message: 'Please enter your email!' }],
                                 })(
                                     <Input
                                         prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                        placeholder="Username"
+                                        placeholder="Email"
+                                        style={{ width: '400px' }}
+                                        onChange={(e) => {
+                                            this.onChange(e)
+                                        }}
+                                    />,
+                                )}
+                            </Form.Item>
+                            <Form.Item>
+                                {getFieldDecorator('email', {
+                                    rules: [{ required: true, message: 'Please input your email!' }],
+                                })(
+                                    <Input
+                                        prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                        placeholder="Email"
+                                        style={{ width: '400px' }}
+                                        onChange={(e) => {
+                                            this.onChange(e)
+                                        }}
+                                    />,
+                                )}
+                            </Form.Item>
+                            <Form.Item>
+                                {getFieldDecorator('email', {
+                                    rules: [{ required: true, message: 'Please input your email!' }],
+                                })(
+                                    <Input
+                                        prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                        placeholder="Email"
+                                        style={{ width: '400px' }}
+                                        onChange={(e) => {
+                                            this.onChange(e)
+                                        }}
+                                    />,
+                                )}
+                            </Form.Item>
+                            <Form.Item>
+                                {getFieldDecorator('email', {
+                                    rules: [{ required: true, message: 'Please input your email!' }],
+                                })(
+                                    <Input
+                                        prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                        placeholder="Email"
                                         style={{ width: '400px' }}
                                         onChange={(e) => {
                                             this.onChange(e)
@@ -130,12 +173,9 @@ export default class Login extends React.Component {
                                     />,
                                 )}
                             </Form.Item>
-                            <Button style={{ float: 'none' }} htmlType="submit" className="login-form-button">
-                                Log in
+                            <Button style={{ float: 'none' }} htmlType="submit" className="register-form-button">
+                                Register
                     </Button>
-                            <div>
-                                Or <a href="/register">register now!</a>
-                            </div>
                         </div>
                     </Form>
                 </Content>
