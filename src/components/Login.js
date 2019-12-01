@@ -74,7 +74,7 @@ export default class Login extends React.Component {
                 var almostToken = JSON.stringify(obj.token);
                 var goodToken = almostToken.replace(/['"]+/g, '');
                 Auth.authenticateUser(goodToken);
-                window.location.href = 'http://localhost:3000/';
+                window.location.href = 'http://localhost:3000/mainView';
             })
     }
 
