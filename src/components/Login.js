@@ -77,7 +77,7 @@ export default class Login extends React.Component {
                 window.location.href = 'http://localhost:3000/mainView';
             })
     }
-
+    
     render() {
         const { getFieldDecorator } = this.props.form;
         return (

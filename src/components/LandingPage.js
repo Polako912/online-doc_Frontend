@@ -73,7 +73,7 @@ export default class LandingPage extends React.Component {
                     >
                         <Menu.Item key="1"><Link to="/mainView">Twoje wizyty</Link></Menu.Item>
                         <Menu.Item key="2"><Link to="/">Wyszukaj lekarza</Link></Menu.Item>
-                        <Menu.Item key="3"><Link to="/login">Wyloguj się</Link></Menu.Item>
+                        <Menu.Item key="3" onClick={() =>{localStorage.removeItem('token')}}><Link to="/">Wyloguj się</Link></Menu.Item>
                     </Menu>
                 </Header>
                 <Content style={{ padding: '0 50px', verticalAlign: 'middle', justifyContent: 'center', width: '60%', margin: 'auto' }}>
