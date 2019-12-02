@@ -76,7 +76,7 @@ export default class LandingPage extends React.Component {
                         <Menu.Item key="3"><Link to="/login">Wyloguj się</Link></Menu.Item>
                     </Menu>
                 </Header>
-                <Content style={{ padding: '0 50px', verticalAlign: 'middle', justifyContent: 'center' }}>
+                <Content style={{ padding: '0 50px', verticalAlign: 'middle', justifyContent: 'center', width: '60%', margin: 'auto' }}>
                     <div>
                         <Table
                             columns={columnsAppointments}
