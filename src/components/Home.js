@@ -22,6 +22,7 @@ class Home extends React.Component {
         };
         this.handleChangeSearchValue = this.handleChangeSearchValue.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
+        this.onChangeCity = this.onChangeCity.bind(this);
     }
 
     handleChangeSearchValue = async (event) => {
@@ -40,10 +41,19 @@ class Home extends React.Component {
         });
     }
 
+    onChangeCity = e => {
+        const { value } = e.target;
+        this.setState({
+            city: value
+        });
+    }
+
     handleSearch = () => {
         localStorage.removeItem('parameter')
+        localStorage.removeItem('city')
         if (this.state.parameter != '') {
             localStorage.setItem('parameter', this.state.parameter)
+            localStorage.setItem('city', this.state.city)
             window.location.href = 'http://localhost:3000/searchResult'
         }
         else {
@@ -82,7 +92,7 @@ class Home extends React.Component {
                         <Input className="search"
                             placeholder="miasto"
                             onChange={(e) => {
-                                this.onChange(e)
+                                this.onChangeCity(e)
                             }} />
                         <Button className="searchBtn" icon="search" onClick={this.handleSearch}>Search</Button>
                     </div>

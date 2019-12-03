@@ -12,33 +12,49 @@ import { Button, Layout, Menu, Breadcrumb, Input } from 'antd';
 import { Divider, Tag } from 'antd';
 import { Dropdown, Icon } from 'antd';
 import { DatePicker } from 'antd';
+import Auth from './../service/Auth';
 
 const { Header, Content, Footer } = Layout;
 
 const { RangePicker } = DatePicker;
 
 export default class SearchResult extends React.Component {
+
     constructor(props) {
         super(props)
         this.state = {
-            doctros: []
+            doctros: [],
+            doctorId: '',
+            locationId: '',
+            regexDate: new RegExp(/\s/),
+            date: ''
         };
         this.columnsDoctors = [
             { title: 'Imię lekarza', dataIndex: 'doctorName', key: 'doctorName' },
             { title: 'Nazwisko lekarza', dataIndex: 'doctorLastName', key: 'doctorLastName' },
             { title: 'Specjalizacja', dataIndex: 'specialization', key: 'specialization' },
             {
-                key: 'date', render: () => <DatePicker showTime placeholder="Wybierz datę" />
+                key: 'date', render: () => <DatePicker onChange={this.onChange} showTime placeholder="Wybierz datę" />
             },
             {
                 key: 'operation', render: () => <a onClick={this.handleAppointment}>Umów się na wizytę</a>,
-            }
+            },
+            
         ];
         this.handleAppointment = this.handleAppointment.bind(this);
+        this.onChange = this.onChange.bind(this);
     };
 
+    onChange(value, dateString) {
+        const formattedDate = dateString.replace(this.state.regexDate, 'T');
+        this.setState({
+            date: formattedDate
+        })
+    }
+
     componentDidMount() {
-        axios.get('http://onlinedocapi.eu-central-1.elasticbeanstalk.com/api/doctors/' + localStorage.getItem('parameter'),
+        axios.get('http://onlinedocapi.eu-central-1.elasticbeanstalk.com/api/doctors/' + localStorage.getItem('parameter') + '/'
+            + localStorage.getItem('city'),
             {
                 headers: {
                     'Content-Type': 'application/json'
@@ -46,7 +62,9 @@ export default class SearchResult extends React.Component {
             })
             .then((response) => {
                 const doctros = response.data;
-                this.setState({ doctros });
+                this.setState({
+                    doctros: doctros,
+                });
             })
             .catch((error) => {
                 console.log(error);
@@ -54,7 +72,32 @@ export default class SearchResult extends React.Component {
     }
 
     handleAppointment = () => {
-
+        var url = 'http://onlinedocapi.eu-central-1.elasticbeanstalk.com/api/appointments';
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${Auth.getToken()}`
+            },
+            body: JSON.stringify({
+                "DateDto": this.state.date,
+                "DoctorDtoId": 13,
+                "LocationDtoId": 7,
+            })
+        };
+        return fetch(url, requestOptions)
+            .then(function (response) {
+                if (response.status === 201) {
+                    return 'Ok';
+                }
+                else {
+                    alert("Failed to create appointment");
+                }
+            })
+            .then(function (data) {
+                console.log(data);
+                window.location.href = 'http://localhost:3000/mainView';
+            })
     }
 
     render() {
@@ -91,12 +134,14 @@ export default class SearchResult extends React.Component {
         const { doctros } = this.state
         const doctorData = doctros.map(d => ({
             id: d.idDto,
-
+            locationId: d.doctorLocationsDto[0].locationDto.idDto,
             doctorName: d.firstNameDto,
             doctorLastName: d.lastNameDto,
             specialization: d.specializationDto,
             phoneNumber: d.phoneNumberDto
         }));
+        const { mappedDoctors } = doctorData;
+        console.log('doctros', doctros);
         return (
             <Layout className="layout customView">
                 {header}
